@@ -1,18 +1,12 @@
 import { test, expect } from '@playwright/test';
+import logger from '../winstonLogger.config';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('Get booking summary', async ({ request }) => {
+ const response =  await request.get("booking/summary?roomid=1");
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+ expect(response.status()).toBe(200);
+ const responseBody = await response.json();
+ logger.debug(JSON.stringify(responseBody));
+
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-});
